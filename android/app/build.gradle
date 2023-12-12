@@ -108,7 +108,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    // firebase step 3 for base app
+    // firebase step 3 and last for base app
     implementation("com.google.firebase:firebase-bom:32.6.0")
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")

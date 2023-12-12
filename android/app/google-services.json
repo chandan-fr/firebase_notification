@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "469139798012-pa56thtbltkl8vkd5o0d6sp0pp8hnes9.apps.googleusercontent.com",
+          "client_id": "469139798012-lok8ahei67rkae0rdphg8i2okmqh1arm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.appnotifi",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "31b656b4816acec72c2b07743f93721f34ce51fe"
           }
         },
         {
