@@ -9,7 +9,7 @@ export const requestUserPermission = async () => {
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-        console.log('Authorization status:', authStatus);
+        // console.log('Authorization status:', authStatus);
         GetFCMToken();
     }
 };
@@ -30,28 +30,28 @@ const GetFCMToken = async () => {
     }
 };
 
-export const notificationServices = () => {
-    messaging().onNotificationOpenedApp(remoteMessage => {
-        console.log(
-            'Notification caused app to open from background state:',
-            remoteMessage.notification,
-        );
-    });
+// export const notificationServices = () => {
+//     messaging().onNotificationOpenedApp(remoteMessage => {
+//         console.log(
+//             'Notification caused app to open from background state:',
+//             remoteMessage.notification,
+//         );
+//     });
 
-    // Foreground notification handling
-    messaging().onMessage(async remoteMessage => {
-        console.log("Notification caused app to show notification from foreground state:", remoteMessage);
-    });
+//     // Foreground notification handling
+//     messaging().onMessage(async remoteMessage => {
+//         console.log("Notification caused app to show notification from foreground state:", remoteMessage);
+//     });
 
-    // Check whether an initial notification is available
-    messaging()
-        .getInitialNotification()
-        .then(remoteMessage => {
-            if (remoteMessage) {
-                console.log(
-                    'Notification caused app to open from quit state:',
-                    remoteMessage.notification,
-                );
-            }
-        });
-};
+//     // Check whether an initial notification is available
+//     messaging()
+//         .getInitialNotification()
+//         .then(remoteMessage => {
+//             if (remoteMessage) {
+//                 console.log(
+//                     'Notification caused app to open from quit state:',
+//                     remoteMessage.notification,
+//                 );
+//             }
+//         });
+// };
