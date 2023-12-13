@@ -13,9 +13,12 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);
 });
 
+
 // // Register kill state handler
 // messaging().getInitialNotification(async remoteMessage => {
 //     console.log('Notification caused app to open from quit state:', remoteMessage.notification);
 // });
+
+
 
 AppRegistry.registerComponent(appName, () => App);
