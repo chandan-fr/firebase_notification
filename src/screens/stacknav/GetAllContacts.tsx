@@ -11,7 +11,6 @@ interface Contact {
     phoneNumbers?: { number?: string }[];
     emailAddresses?: { email?: string }[];
     postalAddresses?: { formattedAddress?: string }[];
-    // Add other properties as needed
 }
 
 const { width, height } = Dimensions.get("window");
@@ -82,11 +81,17 @@ const GetAllContacts: React.FC<GetAllContactsProps> = ({ navigation }) => {
                                                 <View style={styles.spacer} />
 
                                                 <Text style={styles.phoneField}>
-                                                    {item?.phoneNumbers?.map((phoneNumber) => phoneNumber.number).join(', ')}
+                                                    {item?.phoneNumbers && (
+                                                        <Text style={styles.phoneField}>
+                                                            {item.phoneNumbers[0]?.number}
+                                                        </Text>
+                                                    )}
+                                                    {/* {item?.phoneNumbers?.map((phoneNumber) => phoneNumber.number).join(', ')} */}
+                                                    {/* I use the join function to concatenate the phone numbers into a single string, separated by commas. */}
                                                 </Text>
                                                 <View style={styles.spacer} />
                                                 <Text style={styles.emailField}>
-                                                    {item?.emailAddresses?.map((emailAddresse) => emailAddresse.email).join(', ')}
+                                                    {item?.emailAddresses?.map((emailAddresse) => emailAddresse.email)}
                                                 </Text>
                                                 <View style={styles.spacer} />
                                                 <Text style={styles.addressField}>
