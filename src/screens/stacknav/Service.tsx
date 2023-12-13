@@ -12,7 +12,7 @@ const Service: React.FC<ServiceProps> = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text style={{ fontSize: 24, color: "#000" }}>Service</Text>
-      <Button title='clickme' onPress={()=> navigation.navigate("home", {data: "from service", type: "string", extra: {}})} />
+      <Button title='Home' onPress={()=> navigation.navigate("home", {data: "from service", type: "string", extra: {}})} />
     </View>
   )
 }

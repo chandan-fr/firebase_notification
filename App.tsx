@@ -6,6 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import Home, {HomeProps} from './src/screens/stacknav/Home';
 import Service from './src/screens/stacknav/Service';
+import GenDummyContact from './src/screens/stacknav/GenDummyContact';
+import GetAllContacts from './src/screens/stacknav/GetAllContacts';
 
 
 const StackNav = createNativeStackNavigator();
@@ -34,6 +36,8 @@ const App: React.FC = () => {
       <StackNav.Navigator initialRouteName='home'>
         <StackNav.Screen name='home' options={{ headerShown: false }} component={Home as React.ComponentType<HomeProps>} />
         <StackNav.Screen name='service' options={{ headerShown: false }} component={Service} />
+        <StackNav.Screen name='gencontact' options={{ headerShown: false }} component={GenDummyContact} />
+        <StackNav.Screen name='getcontact' options={{ headerShown: false }} component={GetAllContacts} />
       </StackNav.Navigator>
     </NavigationContainer>
   )
