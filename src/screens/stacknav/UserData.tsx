@@ -13,6 +13,7 @@ interface User {
     name?: string,
     email?: string,
     phone?: string,
+    delete_flag: boolean,
     createdAt?: string,
     updatedAt?: string,
     __v?: string | number
@@ -82,7 +83,7 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
         }
     };
 
-    const closeModal = ()=>{
+    const closeModal = () => {
         setShowModal(false);
         setFormValue({ name: "", email: "", phone: "", password: "" });
     };
@@ -96,7 +97,15 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
             <View style={styles.body}>
                 <View style={styles.navbar}>
                     <Text style={styles.heading}>All Users</Text>
-                    <Button title='Add' onPress={() => { setShowModal(true); setTag("add") }} />
+
+                    <TouchableOpacity onPress={() => { setShowModal(true); setTag("add") }}>
+                        <Image style={{ width: 30, height: 30 }} source={require("../../assets/icons/add-user.png")} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => setTracker(!tracker)}>
+                        <Image style={{ width: 30, height: 30 }} source={require("../../assets/icons/reload.png")} />
+                    </TouchableOpacity>
+
                     <Button title='Home' onPress={() => navigation.navigate("home")} />
                 </View>
 
@@ -105,52 +114,55 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
                         {users?.map((item: User, index: number) => {
                             return (
                                 <View key={item?._id}>
-                                    <View style={styles.cardContainer}>
-                                        <View style={styles.cardLeft} />
+                                    {
+                                        !item.delete_flag &&
+                                        <View style={styles.cardContainer}>
+                                            <View style={styles.cardLeft} />
 
-                                        <View style={styles.cardRight}>
-                                            <View style={styles.cardBox}>
-                                                <View style={styles.spacer} />
-                                                <View style={styles.spacer} />
+                                            <View style={styles.cardRight}>
+                                                <View style={styles.cardBox}>
+                                                    <View style={styles.spacer} />
+                                                    <View style={styles.spacer} />
 
-                                                <Text style={styles.nameField}>{item?.name}</Text>
+                                                    <Text style={styles.nameField}>{item?.name}</Text>
 
-                                                <View style={styles.spacer} />
-                                                <View style={styles.spacer} />
+                                                    <View style={styles.spacer} />
+                                                    <View style={styles.spacer} />
 
-                                                <Text style={styles.phoneField}>
-                                                    +91 {item?.phone}
-                                                </Text>
-                                                <View style={styles.spacer} />
-                                                <Text style={styles.emailField}>
-                                                    {item?.email}
-                                                </Text>
+                                                    <Text style={styles.phoneField}>
+                                                        +91 {item?.phone}
+                                                    </Text>
+                                                    <View style={styles.spacer} />
+                                                    <Text style={styles.emailField}>
+                                                        {item?.email}
+                                                    </Text>
 
-                                                <View style={styles.spacer} />
-                                                <View style={styles.spacer} />
-                                                <View style={styles.spacer} />
-                                                <View style={styles.actionContainer}>
-                                                    <TouchableOpacity
-                                                        style={styles.actionIconWrap}
-                                                        onPress={() => { setShowModal(true); setTag("edit"); setFormValue(item) }}
-                                                    >
-                                                        <Image style={styles.actionIcon} source={require("../../assets/icons/pen.png")} />
-                                                    </TouchableOpacity>
+                                                    <View style={styles.spacer} />
+                                                    <View style={styles.spacer} />
+                                                    <View style={styles.spacer} />
+                                                    <View style={styles.actionContainer}>
+                                                        <TouchableOpacity
+                                                            style={styles.actionIconWrap}
+                                                            onPress={() => { setShowModal(true); setTag("edit"); setFormValue(item) }}
+                                                        >
+                                                            <Image style={styles.actionIcon} source={require("../../assets/icons/pen.png")} />
+                                                        </TouchableOpacity>
 
-                                                    <TouchableOpacity
-                                                        style={styles.actionIconWrap}
-                                                        onPress={() => deleteUser(item?._id)}
-                                                    >
-                                                        <Image style={styles.actionIcon} source={require("../../assets/icons/bin.png")} />
-                                                    </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            style={styles.actionIconWrap}
+                                                            onPress={() => deleteUser(item?._id)}
+                                                        >
+                                                            <Image style={styles.actionIcon} source={require("../../assets/icons/bin.png")} />
+                                                        </TouchableOpacity>
+                                                    </View>
                                                 </View>
                                             </View>
-                                        </View>
 
-                                        <View style={styles.imgWrap}>
-                                            <Image style={styles.profile} source={require("../../assets/images/man.png")} />
+                                            <View style={styles.imgWrap}>
+                                                <Image style={styles.profile} source={require("../../assets/images/man.png")} />
+                                            </View>
                                         </View>
-                                    </View>
+                                    }
                                     {(index === users?.length - 1) ? null : (<View style={styles.spacer} />)}
                                 </View>
                             )
