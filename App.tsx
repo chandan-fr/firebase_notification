@@ -8,6 +8,7 @@ import Home, {HomeProps} from './src/screens/stacknav/Home';
 import Service from './src/screens/stacknav/Service';
 import GenDummyContact from './src/screens/stacknav/GenDummyContact';
 import GetAllContacts from './src/screens/stacknav/GetAllContacts';
+import UserData from './src/screens/stacknav/UserData';
 
 
 const StackNav = createNativeStackNavigator();
@@ -38,6 +39,7 @@ const App: React.FC = () => {
         <StackNav.Screen name='service' options={{ headerShown: false }} component={Service} />
         <StackNav.Screen name='gencontact' options={{ headerShown: false }} component={GenDummyContact} />
         <StackNav.Screen name='getcontact' options={{ headerShown: false }} component={GetAllContacts} />
+        <StackNav.Screen name='userdata' options={{ headerShown: false }} component={UserData} />
       </StackNav.Navigator>
     </NavigationContainer>
   )

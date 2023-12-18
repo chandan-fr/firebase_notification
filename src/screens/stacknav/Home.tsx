@@ -44,6 +44,9 @@ const Home: React.FC<HomeProps> = ({ navigation, route }) => {
       <Button title='Generate Contact' onPress={() => navigation.navigate("gencontact")} />
       <View style={styles.spacer} />
       <Button title='Get Contacts' onPress={() => navigation.navigate("getcontact")} />
+
+      <View style={styles.spacer} />
+      <Button title='user Data' onPress={() => navigation.navigate("userdata")} />
     </View>
   )
 }
