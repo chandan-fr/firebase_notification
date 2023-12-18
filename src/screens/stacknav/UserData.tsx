@@ -2,6 +2,7 @@ import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, ScrollView, Bu
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import FormModal from '../../utility/FormModal';
+import { ImgUrl, url } from '../../config/StaticVariables';
 
 
 interface UserDataProps {
@@ -13,7 +14,8 @@ interface User {
     name?: string,
     email?: string,
     phone?: string,
-    delete_flag: boolean,
+    delete_flag?: boolean,
+    profile_photo?: string,
     createdAt?: string,
     updatedAt?: string,
     __v?: string | number
@@ -29,7 +31,6 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
     const [formValue, setFormValue] = useState<object>({ name: "", email: "", phone: "", password: "" });
     const [tag, setTag] = useState<string>("");
 
-    const url: string = "http://192.168.7.243:4400/api";
 
     const getAllUser = async (): Promise<void> => {
         const res = await axios.get(url + "/alluser");
@@ -40,8 +41,8 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
         const res = await axios.post(url + "/adduser", formValue);
 
         if (res.data.success) {
-            setTracker(!tracker);
             Alert.alert(res.data.message);
+            setTracker(!tracker);
         } else {
             Alert.alert(res.data.message);
         }
@@ -64,8 +65,8 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
         const res = await axios.post(url + "/updateuser/" + id, formValue);
 
         if (res.data.success) {
-            setTracker(!tracker);
             Alert.alert(res.data.message);
+            setTracker(!tracker);
         } else {
             Alert.alert(res.data.message);
         }
@@ -76,8 +77,8 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
         const res = await axios.post(url + "/deleteuser/" + id);
         // console.log("delete user ==>", res?.data);
         if (res.data.success) {
-            setTracker(!tracker);
             Alert.alert(res.data.message);
+            setTracker(!tracker);
         } else {
             Alert.alert(res.data.message);
         }
@@ -159,7 +160,15 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
                                             </View>
 
                                             <View style={styles.imgWrap}>
-                                                <Image style={styles.profile} source={require("../../assets/images/man.png")} />
+                                                <Image
+                                                    style={styles.profile}
+                                                    source={
+                                                        item?.profile_photo ? 
+                                                        {uri: ImgUrl+item.profile_photo}
+                                                        :
+                                                        require("../../assets/images/user.png")
+                                                    }
+                                                />
                                             </View>
                                         </View>
                                     }
