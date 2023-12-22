@@ -9,6 +9,7 @@ import Service from './src/screens/stacknav/Service';
 import GenDummyContact from './src/screens/stacknav/GenDummyContact';
 import GetAllContacts from './src/screens/stacknav/GetAllContacts';
 import UserData from './src/screens/stacknav/UserData';
+import ListManipulation from './src/screens/stacknav/ListManipulation';
 
 
 const StackNav = createNativeStackNavigator();
@@ -40,6 +41,7 @@ const App: React.FC = () => {
         <StackNav.Screen name='gencontact' options={{ headerShown: false }} component={GenDummyContact} />
         <StackNav.Screen name='getcontact' options={{ headerShown: false }} component={GetAllContacts} />
         <StackNav.Screen name='userdata' options={{ headerShown: false }} component={UserData} />
+        <StackNav.Screen name='fltlst' options={{ headerShown: false }} component={ListManipulation} />
       </StackNav.Navigator>
     </NavigationContainer>
   )

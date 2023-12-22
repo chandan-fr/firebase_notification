@@ -47,6 +47,9 @@ const Home: React.FC<HomeProps> = ({ navigation, route }) => {
 
       <View style={styles.spacer} />
       <Button title='user Data' onPress={() => navigation.navigate("userdata")} />
+      
+      <View style={styles.spacer} />
+      <Button title='flatlist' onPress={() => navigation.navigate("fltlst")} />
     </View>
   )
 }
