@@ -52,10 +52,9 @@ const ListManipulation = ({ navigation }: ListManipulationProps): JSX.Element =>
     const handleLongPress = (id: number) => {
         if (isFrstTm) {
             setToggleCheckBox(true);
-
             const newData = [...products];
             newData.map((item, index) => index == id ? item.isSelected = !item.isSelected : item.isSelected);
-
+            
             setProducts(newData);
             setIsFrstTm(false);
         };
@@ -118,8 +117,8 @@ const ListManipulation = ({ navigation }: ListManipulationProps): JSX.Element =>
                     <View style={{ flex: 1 }}>
                         <FlatList
                             data={products}
-                            // onEndReached={loadMore}
-                            // ListFooterComponent={<ActivityIndicator animating={lazyLoad} size={'large'} color={"#3CCBA1"} style={{marginBottom: 20, marginTop: 10}} />}
+                            onEndReached={loadMore}
+                            ListFooterComponent={<ActivityIndicator animating={lazyLoad} size={'large'} color={"#3CCBA1"} style={{marginBottom: 20, marginTop: 10}} />}
                             showsVerticalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => (
