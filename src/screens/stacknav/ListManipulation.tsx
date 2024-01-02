@@ -1,9 +1,16 @@
 import { StyleSheet, Text, View, SafeAreaView, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CheckBox from '@react-native-community/checkbox';
+import LinearGradient from 'react-native-linear-gradient';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+
+const ShimmerView = createShimmerPlaceholder(LinearGradient);
 
 type ListManipulationProps = {
     navigation: any;
+};
+type CustomShimmerComponentProps = {
+    len: number;
 };
 
 type Product = {
@@ -12,7 +19,50 @@ type Product = {
     title: string;
     description: string;
     isSelected?: boolean;
-}
+};
+
+const BaseShimmerComp = (): JSX.Element => (
+    <View style={styles.itemCont}>
+        <ShimmerView
+            style={{ width: 100, height: 100, borderRadius: 10, }}
+            shimmerColors={["#2EBB92", "#808886", "#F19733"]}
+        />
+        <View style={styles.rightBox}>
+            <ShimmerView
+                style={{ width: 200, marginBottom: 15, borderRadius: 10 }}
+                shimmerColors={["#2EBB92", "#808886", "#F19733"]}
+            />
+            <ShimmerView
+                style={{ width: 150, marginBottom: 6, borderRadius: 10 }}
+                shimmerColors={["#2EBB92", "#808886", "#F19733"]}
+            />
+            <ShimmerView
+                style={{ width: 250, height: 40, borderRadius: 10 }}
+                shimmerColors={["#2EBB92", "#808886", "#F19733"]}
+            />
+        </View>
+    </View>
+)
+
+const CustomShimmerComponent = ({ len }: CustomShimmerComponentProps): JSX.Element => {
+    const shimmerArray = Array.from({ length: len }, (_, index) => index);
+
+    return (
+        <FlatList
+            data={shimmerArray}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(_, i) => i.toString()}
+            renderItem={({item, index}) => (
+                <>
+                    <BaseShimmerComp />
+                    {index == shimmerArray.length - 1 ? <View style={{ marginBottom: 15 }} /> : null}
+                </>
+            )}
+        />
+    )
+};
+
+
 
 const ListManipulation = ({ navigation }: ListManipulationProps): JSX.Element => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -32,21 +82,28 @@ const ListManipulation = ({ navigation }: ListManipulationProps): JSX.Element =>
                 setLoading(false);
             })
             .catch(err => {
-                console.log(err);
+                console.log("get products error ==>", err);
                 setLoading(false);
+                return;
             })
     };
 
     const loadMore = () => {
-        setLazyLoad(true);
-        fetch(`https://dummyjson.com/products?skip=${products?.length}&limit=${10}`)
-            .then(res => res.json())
-            .then(json => {
-                const newData: Product[] = [...json.products];
-                newData.map((item: Product) => item.isSelected = false);
-                setProducts([...products, ...newData]);
-                setLazyLoad(false);
-            });
+        if (products?.length < 100) {
+            setLazyLoad(true);
+            fetch(`https://dummyjson.com/products?skip=${products?.length}&limit=${10}`)
+                .then(res => res.json())
+                .then(json => {
+                    const newData: Product[] = [...json.products];
+                    newData.map((item: Product) => item.isSelected = false);
+                    setProducts([...products, ...newData]);
+                    setLazyLoad(false);
+                }).catch(err => {
+                    setLazyLoad(false);
+                    console.log("load more error ==>", err);
+                    return;
+                });
+        }
     };
 
     const handleLongPress = (id: number) => {
@@ -54,7 +111,7 @@ const ListManipulation = ({ navigation }: ListManipulationProps): JSX.Element =>
             setToggleCheckBox(true);
             const newData = [...products];
             newData.map((item, index) => index == id ? item.isSelected = !item.isSelected : item.isSelected);
-            
+
             setProducts(newData);
             setIsFrstTm(false);
         };
@@ -112,13 +169,16 @@ const ListManipulation = ({ navigation }: ListManipulationProps): JSX.Element =>
             }
             {
                 loading ?
-                    <ActivityIndicator animating={loading} size={'large'} color={"#3CCBA1"} />
+                    // <ActivityIndicator animating={loading} size={'large'} color={"#3CCBA1"} />
+                    <CustomShimmerComponent len={30} />
+
                     :
                     <View style={{ flex: 1 }}>
                         <FlatList
                             data={products}
                             onEndReached={loadMore}
-                            ListFooterComponent={<ActivityIndicator animating={lazyLoad} size={'large'} color={"#3CCBA1"} style={{marginBottom: 20, marginTop: 10}} />}
+                            // ListFooterComponent={products.length < 100 ? <ActivityIndicator animating={lazyLoad} size={'large'} color={"#3CCBA1"} style={{ marginBottom: 20, marginTop: 10 }} /> : null}
+                            ListFooterComponent={products.length < 100 ? <View style={{marginBottom: 13}}><BaseShimmerComp /></View> : null}
                             showsVerticalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => (
@@ -190,6 +250,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginHorizontal: 10,
         borderRadius: 10,
+        marginBottom: 10
     },
     selectAll: {
         borderWidth: 1,
