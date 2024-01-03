@@ -163,10 +163,10 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
                                                 <Image
                                                     style={styles.profile}
                                                     source={
-                                                        item?.profile_photo ? 
-                                                        {uri: ImgUrl+item.profile_photo}
-                                                        :
-                                                        require("../../assets/images/user.png")
+                                                        item?.profile_photo ?
+                                                            { uri: ImgUrl + item.profile_photo }
+                                                            :
+                                                            require("../../assets/images/user.png")
                                                     }
                                                 />
                                             </View>
