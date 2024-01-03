@@ -1,8 +1,9 @@
-import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, ScrollView, Button, TouchableOpacity, Alert } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, ScrollView, Button, TouchableOpacity, Alert, PermissionsAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import FormModal from '../../utility/FormModal';
 import { ImgUrl, url } from '../../config/StaticVariables';
+import RNFetchBlob from 'rn-fetch-blob';
 
 
 interface UserDataProps {
@@ -89,9 +90,26 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
         setFormValue({ name: "", email: "", phone: "", password: "" });
     };
 
+    const downloadFile = (url: string) => {
+        const { config, fs } = RNFetchBlob;
+        const fileDir = fs.dirs.DownloadDir;
+        const flName = url.split("/public/userImg/")[1].split(".")[0];
+
+        config({
+            fileCache: true,
+            addAndroidDownloads: {
+                useDownloadManager: true,
+                notification: true,
+                path: fileDir + `/${flName}`,
+                description: "Downloading..."
+            },
+        }).fetch("GET", url, {}).then(res => Alert.alert("", "File Downloaded."));
+    };
+
     useEffect(() => {
         getAllUser();
     }, [tracker]);
+
 
     return (
         <SafeAreaView style={styles.parent}>
@@ -100,86 +118,116 @@ const UserData: React.FC<UserDataProps> = ({ navigation }) => {
                     <Text style={styles.heading}>All Users</Text>
 
                     <TouchableOpacity onPress={() => { setShowModal(true); setTag("add") }}>
-                        <Image style={{ width: 30, height: 30 }} source={require("../../assets/icons/add-user.png")} />
+                        <Image style={{ width: 40, height: 40 }} source={require("../../assets/icons/add-user.png")} />
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => setTracker(!tracker)}>
-                        <Image style={{ width: 30, height: 30 }} source={require("../../assets/icons/reload.png")} />
+                        <Image style={{ width: 40, height: 40 }} source={require("../../assets/icons/reload.png")} />
                     </TouchableOpacity>
 
                     <Button title='Home' onPress={() => navigation.navigate("home")} />
                 </View>
 
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <View style={styles.cardWrap}>
-                        {users?.map((item: User, index: number) => {
-                            return (
-                                <View key={item?._id}>
-                                    {
-                                        !item.delete_flag &&
-                                        <View style={styles.cardContainer}>
-                                            <View style={styles.cardLeft} />
+                {users.length ?
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        style={{ paddingHorizontal: 10, marginTop: 10 }}
+                    >
+                        <View style={styles.cardWrap}>
+                            {users?.map((item: User, index: number) => {
+                                return (
+                                    <View key={item?._id}>
+                                        {
+                                            !item.delete_flag &&
+                                            <View style={styles.cardContainer}>
+                                                <View style={styles.cardLeft} />
 
-                                            <View style={styles.cardRight}>
-                                                <View style={styles.cardBox}>
-                                                    <View style={styles.spacer} />
-                                                    <View style={styles.spacer} />
+                                                <View style={styles.cardRight}>
+                                                    <View style={styles.cardBox}>
+                                                        <View style={styles.spacer} />
+                                                        <View style={styles.spacer} />
 
-                                                    <Text style={styles.nameField}>{item?.name}</Text>
+                                                        <Text style={styles.nameField}>{item?.name}</Text>
 
-                                                    <View style={styles.spacer} />
-                                                    <View style={styles.spacer} />
+                                                        <View style={styles.spacer} />
+                                                        <View style={styles.spacer} />
 
-                                                    <Text style={styles.phoneField}>
-                                                        +91 {item?.phone}
-                                                    </Text>
-                                                    <View style={styles.spacer} />
-                                                    <Text style={styles.emailField}>
-                                                        {item?.email}
-                                                    </Text>
+                                                        <Text style={styles.phoneField}>
+                                                            +91 {item?.phone}
+                                                        </Text>
+                                                        <View style={styles.spacer} />
+                                                        <Text style={styles.emailField}>
+                                                            {item?.email}
+                                                        </Text>
 
-                                                    <View style={styles.spacer} />
-                                                    <View style={styles.spacer} />
-                                                    <View style={styles.spacer} />
-                                                    <View style={styles.actionContainer}>
-                                                        <TouchableOpacity
-                                                            style={styles.actionIconWrap}
-                                                            onPress={() => { setShowModal(true); setTag("edit"); setFormValue(item) }}
-                                                        >
-                                                            <Image style={styles.actionIcon} source={require("../../assets/icons/pen.png")} />
-                                                        </TouchableOpacity>
+                                                        <View style={styles.spacer} />
+                                                        <View style={styles.spacer} />
+                                                        <View style={styles.spacer} />
+                                                        <View style={styles.actionContainer}>
+                                                            <TouchableOpacity
+                                                                style={styles.actionIconWrap}
+                                                                onPress={() => downloadFile(ImgUrl + item.profile_photo)}
+                                                            >
+                                                                <Image style={{ tintColor: "#2EBB92", width: 25, height: 25 }} source={require("../../assets/icons/downloads.png")} />
+                                                            </TouchableOpacity>
 
-                                                        <TouchableOpacity
-                                                            style={styles.actionIconWrap}
-                                                            onPress={() => deleteUser(item?._id)}
-                                                        >
-                                                            <Image style={styles.actionIcon} source={require("../../assets/icons/bin.png")} />
-                                                        </TouchableOpacity>
+                                                            <TouchableOpacity
+                                                                style={styles.actionIconWrap}
+                                                                onPress={() => { setShowModal(true); setTag("edit"); setFormValue(item) }}
+                                                            >
+                                                                <Image style={styles.actionIcon} source={require("../../assets/icons/pen.png")} />
+                                                            </TouchableOpacity>
+
+                                                            <TouchableOpacity
+                                                                style={styles.actionIconWrap}
+                                                                onPress={() => deleteUser(item?._id)}
+                                                            >
+                                                                <Image style={styles.actionIcon} source={require("../../assets/icons/bin.png")} />
+                                                            </TouchableOpacity>
+                                                        </View>
                                                     </View>
                                                 </View>
-                                            </View>
 
-                                            <View style={styles.imgWrap}>
-                                                <Image
-                                                    style={styles.profile}
-                                                    source={
-                                                        item?.profile_photo ?
-                                                            { uri: ImgUrl + item.profile_photo }
-                                                            :
-                                                            require("../../assets/images/user.png")
-                                                    }
-                                                />
+                                                <View style={styles.imgWrap}>
+                                                    <Image
+                                                        style={styles.profile}
+                                                        source={
+                                                            item?.profile_photo ?
+                                                                { uri: ImgUrl + item.profile_photo }
+                                                                :
+                                                                require("../../assets/images/user.png")
+                                                        }
+                                                    />
+                                                </View>
                                             </View>
-                                        </View>
-                                    }
-                                    {(index === users?.length - 1) ? null : (<View style={styles.spacer} />)}
-                                </View>
-                            )
-                        })}
+                                        }
+                                        {(index === users?.length - 1) ? null : (<View style={styles.spacer} />)}
+                                    </View>
+                                )
+                            })}
+                        </View>
+                    </ScrollView>
+                    :
+                    <View
+                        style={{ marginTop: 20, marginHorizontal: 10, marginBottom: 10, alignItems: "center", flex: 1, justifyContent: "center" }}
+                    >
+                        <Text style={{ color: "#000f0f", fontSize: 20 }}>
+                            No Users Found!!!
+                        </Text>
                     </View>
-                </ScrollView>
+                }
 
                 <FormModal show={showModal} modalFunc={modalFunc} userData={formValue} setUserData={setFormValue} tag={tag} closeModal={closeModal} />
+
+                <View
+                    style={{
+                        position: "absolute",
+                        width: width,
+                        height: 2,
+                        elevation: 4,
+                        top: 67,
+                    }}
+                />
             </View>
         </SafeAreaView>
     )
@@ -198,7 +246,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: 'space-between',
-        marginRight: 10
+        paddingRight: 10,
+        marginVertical: 10,
     },
     heading: {
         color: "#000",
@@ -209,9 +258,7 @@ const styles = StyleSheet.create({
     },
     cardWrap: {
         flex: 1,
-        marginTop: 20,
-        marginHorizontal: 10,
-        marginBottom: 10,
+        marginVertical: 10,
     },
     cardContainer: {
         position: "relative",
@@ -244,6 +291,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-evenly",
+        columnGap: 15,
     },
     actionIcon: {
         width: 40,
@@ -256,7 +304,7 @@ const styles = StyleSheet.create({
         width: 42,
         height: 42,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     imgWrap: {
         position: "absolute",
